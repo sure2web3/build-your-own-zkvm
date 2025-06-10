@@ -23,116 +23,116 @@ The `prover` folder in `nexus-zkvm` contains the main implementation of the zero
 
 ```shell
 prover  
-├── Cargo.toml                  # Crate manifest and dependencies  
+├── Cargo.toml                  # Crate manifest and dependencies (the main manifest file for the crate, specifying dependencies and metadata)  
 ├── macros  
-│   ├── Cargo.toml              # Manifest for macros subcrate  
+│   ├── Cargo.toml              # Manifest for macros subcrate (manifest for the procedural macros subcrate, which is used for code generation)  
 │   └── src  
-│       ├── column_enum.rs      # Macro for generating trace column enums  
-│       └── lib.rs              # Entry point for macros crate  
-├── README.md                   # Documentation for the prover crate  
+│       ├── column_enum.rs      # Macro for generating trace column enums (Rust procedural macro that generates enums for trace columns, reducing repetitive code and ensuring consistency)  
+│       └── lib.rs              # Entry point for macros crate (the main library file for the macros subcrate, where macro exports are defined)  
+├── README.md                   # Documentation for the prover crate (provides an overview, usage, and design notes for the prover crate)  
 └── src  
     ├── chips  
-    │   ├── cpu.rs              # CPU chip constraints and logic  
-    │   ├── custom.rs           # Custom chip implementations  
+    │   ├── cpu.rs              # CPU chip constraints and logic (defines the algebraic constraints and logic for the CPU chip, which models the core processor state transitions in the zkVM)  
+    │   ├── custom.rs           # Custom chip implementations (contains implementations for custom chips, allowing extension of the VM with new features or constraints)  
     │   ├── decoding  
-    │   │   ├── mod.rs          # Module for instruction decoding  
-    │   │   ├── type_b.rs       # Decoding for type B instructions  
-    │   │   ├── type_i.rs       # Decoding for type I instructions  
-    │   │   ├── type_j.rs       # Decoding for type J instructions  
-    │   │   ├── type_r.rs       # Decoding for type R instructions  
-    │   │   ├── type_s.rs       # Decoding for type S instructions  
-    │   │   ├── type_sys.rs     # Decoding for system instructions  
-    │   │   └── type_u.rs       # Decoding for type U instructions  
+    │   │   ├── mod.rs          # Module for instruction decoding (the main module for instruction decoding, organizing all decoding logic for different instruction types)  
+    │   │   ├── type_b.rs       # Decoding for type B instructions (handles decoding for RISC-V type B instructions, which are conditional branch instructions such as BEQ, BNE, BLT, BGE, BLTU, BGEU; in nexus-zkvm, these control program flow based on register comparisons)  
+    │   │   ├── type_i.rs       # Decoding for type I instructions (handles decoding for RISC-V type I instructions, which include immediate arithmetic, loads, and some system instructions; in nexus-zkvm, these are used for operations like ADDI, LW, JALR, etc.)  
+    │   │   ├── type_j.rs       # Decoding for type J instructions (handles decoding for RISC-V type J instructions, which are jump instructions such as JAL; in nexus-zkvm, these enable unconditional jumps with a 20-bit immediate)  
+    │   │   ├── type_r.rs       # Decoding for type R instructions (handles decoding for RISC-V type R instructions, which are register-register arithmetic and logic instructions like ADD, SUB, SLL, etc.; in nexus-zkvm, these perform operations between two registers)  
+    │   │   ├── type_s.rs       # Decoding for type S instructions (handles decoding for RISC-V type S instructions, which are store instructions such as SW, SB, SH; in nexus-zkvm, these write register values to memory)  
+    │   │   ├── type_sys.rs     # Decoding for system instructions (handles decoding for system instructions, such as ECALL and EBREAK; in nexus-zkvm, these are used for system calls and environment interaction)  
+    │   │   └── type_u.rs       # Decoding for type U instructions (handles decoding for RISC-V type U instructions, which are upper immediate instructions like LUI and AUIPC; in nexus-zkvm, these load a 20-bit immediate into the upper bits of a register or add it to the PC)  
     │   ├── instructions  
-    │   │   ├── add.rs          # ADD instruction constraints  
-    │   │   ├── auipc.rs        # AUIPC instruction constraints  
-    │   │   ├── beq.rs          # BEQ instruction constraints  
-    │   │   ├── bge.rs          # BGE instruction constraints  
-    │   │   ├── bgeu.rs         # BGEU instruction constraints  
-    │   │   ├── bit_op.rs       # Bitwise operation constraints  
-    │   │   ├── blt.rs          # BLT instruction constraints  
-    │   │   ├── bltu.rs         # BLTU instruction constraints  
-    │   │   ├── bne.rs          # BNE instruction constraints  
-    │   │   ├── jal.rs          # JAL instruction constraints  
-    │   │   ├── jalr.rs         # JALR instruction constraints  
-    │   │   ├── load_store.rs   # Load/store instruction constraints  
-    │   │   ├── lui.rs          # LUI instruction constraints  
-    │   │   ├── mod.rs          # Module for instruction constraints  
-    │   │   ├── sll.rs          # SLL instruction constraints  
-    │   │   ├── slt.rs          # SLT instruction constraints  
-    │   │   ├── sltu.rs         # SLTU instruction constraints  
-    │   │   ├── sra.rs          # SRA instruction constraints  
-    │   │   ├── srl.rs          # SRL instruction constraints  
-    │   │   ├── sub.rs          # SUB instruction constraints  
-    │   │   └── syscall.rs      # System call instruction constraints  
+    │   │   ├── add.rs          # ADD instruction constraints (algebraic constraints for the ADD instruction, which performs register addition in the VM)  
+    │   │   ├── auipc.rs        # AUIPC instruction constraints (constraints for AUIPC, which stands for Add Upper Immediate to PC; in RISC-V and nexus-zkvm, this adds a 20-bit immediate to the program counter and writes the result to a register)  
+    │   │   ├── beq.rs          # BEQ instruction constraints (constraints for BEQ, Branch if Equal; checks if two registers are equal and conditionally branches)  
+    │   │   ├── bge.rs          # BGE instruction constraints (constraints for BGE, Branch if Greater or Equal; checks if one register is greater than or equal to another and branches accordingly)  
+    │   │   ├── bgeu.rs         # BGEU instruction constraints (constraints for BGEU, Branch if Greater or Equal Unsigned; similar to BGE but for unsigned values)  
+    │   │   ├── bit_op.rs       # Bitwise operation constraints (constraints for bitwise operations such as AND, OR, XOR, SLL, SRL, SRA; ensures correct bitwise logic in the VM)  
+    │   │   ├── blt.rs          # BLT instruction constraints (constraints for BLT, Branch if Less Than; checks if one register is less than another and branches)  
+    │   │   ├── bltu.rs         # BLTU instruction constraints (constraints for BLTU, Branch if Less Than Unsigned; unsigned comparison for conditional branching)  
+    │   │   ├── bne.rs          # BNE instruction constraints (constraints for BNE, Branch if Not Equal; branches if two registers are not equal)  
+    │   │   ├── jal.rs          # JAL instruction constraints (constraints for JAL, Jump and Link; jumps to a target address and saves the return address in a register)  
+    │   │   ├── jalr.rs         # JALR instruction constraints (constraints for JALR, Jump and Link Register; indirect jump using a register and saves the return address)  
+    │   │   ├── load_store.rs   # Load/store instruction constraints (constraints for memory load and store instructions, such as LW, SW, LB, SB; ensures correct memory access and data movement)  
+    │   │   ├── lui.rs          # LUI instruction constraints (constraints for LUI, Load Upper Immediate; loads a 20-bit immediate into the upper bits of a register)  
+    │   │   ├── mod.rs          # Module for instruction constraints (main module for organizing all instruction constraint files)  
+    │   │   ├── sll.rs          # SLL instruction constraints (constraints for SLL, Shift Left Logical; shifts a register value left by a specified amount)  
+    │   │   ├── slt.rs          # SLT instruction constraints (constraints for SLT, Set Less Than; sets a register to 1 if one register is less than another, else 0)  
+    │   │   ├── sltu.rs         # SLTU instruction constraints (constraints for SLTU, Set Less Than Unsigned; unsigned version of SLT)  
+    │   │   ├── sra.rs          # SRA instruction constraints (constraints for SRA, Shift Right Arithmetic; arithmetic right shift, preserving sign)  
+    │   │   ├── srl.rs          # SRL instruction constraints (constraints for SRL, Shift Right Logical; logical right shift, filling with zeros)  
+    │   │   ├── sub.rs          # SUB instruction constraints (constraints for SUB, subtraction between two registers)  
+    │   │   └── syscall.rs      # System call instruction constraints (constraints for system call instructions, such as ECALL; enables interaction with the host or environment)  
     │   ├── memory_check  
-    │   │   ├── mod.rs          # Module for memory checks  
-    │   │   ├── program_mem_check.rs   # Program memory consistency checks  
-    │   │   ├── register_mem_check.rs  # Register memory consistency checks  
-    │   │   └── timestamp.rs    # Timestamp checks for memory  
-    │   ├── mod.rs              # Main module for chips  
+    │   │   ├── mod.rs          # Module for memory checks (main module for memory consistency and integrity checks)  
+    │   │   ├── program_mem_check.rs   # Program memory consistency checks (checks to ensure program memory is accessed and modified correctly)  
+    │   │   ├── register_mem_check.rs  # Register memory consistency checks (checks to ensure register and memory states are consistent)  
+    │   │   └── timestamp.rs    # Timestamp checks for memory (logic for tracking the order and timing of memory operations)  
+    │   ├── mod.rs              # Main module for chips (aggregates all chip modules and logic)  
     │   ├── range_check  
-    │   │   ├── mod.rs          # Module for range checks  
-    │   │   ├── range_bool.rs   # Boolean range checks  
-    │   │   ├── range128.rs     # 128-bit range checks  
-    │   │   ├── range16.rs      # 16-bit range checks  
-    │   │   ├── range256.rs     # 256-bit range checks  
-    │   │   ├── range32.rs      # 32-bit range checks  
-    │   │   └── range8.rs       # 8-bit range checks  
-    │   └── utils.rs            # Utility functions for chips  
-    ├── column.rs               # Trace column definitions and utilities  
+    │   │   ├── mod.rs          # Module for range checks (main module for range constraint logic)  
+    │   │   ├── range_bool.rs   # Boolean range checks (ensures a value is either 0 or 1, used for boolean constraints)  
+    │   │   ├── range128.rs     # 128-bit range checks (ensures a value fits within 128 bits)  
+    │   │   ├── range16.rs      # 16-bit range checks (ensures a value fits within 16 bits)  
+    │   │   ├── range256.rs     # 256-bit range checks (ensures a value fits within 256 bits)  
+    │   │   ├── range32.rs      # 32-bit range checks (ensures a value fits within 32 bits)  
+    │   │   └── range8.rs       # 8-bit range checks (ensures a value fits within 8 bits)  
+    │   └── utils.rs            # Utility functions for chips (helper functions for chip logic, constraint evaluation, and code reuse)  
+    ├── column.rs               # Trace column definitions and utilities (defines trace columns, which represent VM state variables in the execution trace, and provides utilities for accessing and manipulating them)  
     ├── components  
-    │   ├── lookups.rs          # Lookup table logic for constraints  
-    │   └── mod.rs              # Module for components  
+    │   ├── lookups.rs          # Lookup table logic for constraints (logic for lookup tables used in constraints, such as memory or register value tables)  
+    │   └── mod.rs              # Module for components (main module for reusable components shared across chips and constraints)  
     ├── extensions  
-    │   ├── bit_op.rs           # Bitwise operation extensions  
+    │   ├── bit_op.rs           # Bitwise operation extensions (extensions for advanced bitwise operations, supporting cryptographic and custom logic)  
     │   ├── config  
-    │   │   └── mod.rs          # Configuration for extensions  
-    │   ├── final_reg.rs        # Final register state extensions  
+    │   │   └── mod.rs          # Configuration for extensions (configuration logic for extension modules, such as parameter settings)  
+    │   ├── final_reg.rs        # Final register state extensions (logic for tracking and constraining the final state of registers at program end)  
     │   ├── keccak  
     │   │   ├── bit_rotate  
-    │   │   │   └── mod.rs      # Bit rotation logic for Keccak  
+    │   │   │   └── mod.rs      # Bit rotation logic for Keccak (logic for bit rotation operations used in Keccak hash computations)  
     │   │   ├── bitwise_table  
-    │   │   │   ├── constraints.rs      # Constraints for Keccak bitwise table  
-    │   │   │   ├── mod.rs              # Module for bitwise table  
-    │   │   │   ├── preprocessed_columns.rs # Preprocessed columns for bitwise table  
-    │   │   │   └── trace.rs            # Trace logic for bitwise table  
+    │   │   │   ├── constraints.rs      # Constraints for Keccak bitwise table (algebraic constraints for the Keccak bitwise operation table)  
+    │   │   │   ├── mod.rs              # Module for bitwise table (main module for Keccak bitwise table logic)  
+    │   │   │   ├── preprocessed_columns.rs # Preprocessed columns for bitwise table (columns precomputed for efficient bitwise operations in Keccak)  
+    │   │   │   └── trace.rs            # Trace logic for bitwise table (logic for constructing and managing the bitwise operation trace for Keccak)  
     │   │   ├── memory_check  
-    │   │   │   ├── constraints.rs      # Constraints for Keccak memory check  
-    │   │   │   ├── mod.rs              # Module for Keccak memory check  
-    │   │   │   └── trace.rs            # Trace logic for Keccak memory check  
-    │   │   ├── mod.rs          # Main module for Keccak extensions  
+    │   │   │   ├── constraints.rs      # Constraints for Keccak memory check (constraints for memory consistency in Keccak operations)  
+    │   │   │   ├── mod.rs              # Module for Keccak memory check (main module for Keccak memory check logic)  
+    │   │   │   └── trace.rs            # Trace logic for Keccak memory check (logic for tracking memory operations in Keccak)  
+    │   │   ├── mod.rs          # Main module for Keccak extensions (aggregates all Keccak-related extension logic)  
     │   │   └── round  
-    │   │       ├── component.rs        # Keccak round component logic  
-    │   │       ├── constants.rs        # Constants for Keccak rounds  
-    │   │       ├── constraints.rs      # Constraints for Keccak rounds  
-    │   │       ├── eval.rs             # Evaluation logic for Keccak rounds  
-    │   │       ├── interaction_trace.rs # Interaction trace for Keccak rounds  
-    │   │       ├── mod.rs              # Module for Keccak round  
-    │   │       └── trace.rs            # Trace logic for Keccak rounds  
-    │   ├── mod.rs              # Main module for extensions  
-    │   ├── multiplicity.rs     # Multiplicity extension logic  
-    │   ├── multiplicity8.rs    # 8-bit multiplicity extension logic  
-    │   ├── ram_init_final.rs   # RAM initialization/finalization logic  
-    │   └── trace.rs            # Trace logic for extensions  
-    ├── lib.rs                  # Crate entry point and main logic  
-    ├── machine.rs              # VM machine state and orchestration  
-    ├── test_utils.rs           # Utilities for testing the prover  
+    │   │       ├── component.rs        # Keccak round component logic (logic for each round of the Keccak hash function, including state updates)  
+    │   │       ├── constants.rs        # Constants for Keccak rounds (constants used in Keccak round computations, such as round constants)  
+    │   │       ├── constraints.rs      # Constraints for Keccak rounds (algebraic constraints for each Keccak round)  
+    │   │       ├── eval.rs             # Evaluation logic for Keccak rounds (logic for evaluating Keccak round computations)  
+    │   │       ├── interaction_trace.rs # Interaction trace for Keccak rounds (tracks data flow and interactions between Keccak rounds)  
+    │   │       ├── mod.rs              # Module for Keccak round (main module for Keccak round logic)  
+    │   │       └── trace.rs            # Trace logic for Keccak rounds (logic for constructing and managing the trace for Keccak rounds)  
+    │   ├── mod.rs              # Main module for extensions (aggregates all extension modules and logic)  
+    │   ├── multiplicity.rs     # Multiplicity extension logic (logic for multiplicity constraints, used for enforcing multiple occurrences or relationships)  
+    │   ├── multiplicity8.rs    # 8-bit multiplicity extension logic (logic for 8-bit multiplicity constraints, a specialized form of multiplicity checks)  
+    │   ├── ram_init_final.rs   # RAM initialization/finalization logic (logic for initializing and finalizing RAM state, ensuring memory is set up and cleaned up correctly)  
+    │   └── trace.rs            # Trace logic for extensions (logic for constructing and managing traces for extension features)  
+    ├── lib.rs                  # Crate entry point and main logic (the main entry point for the prover crate, organizing modules and exposing the public API)  
+    ├── machine.rs              # VM machine state and orchestration (manages the overall VM state, coordinates chips, and controls the proof process)  
+    ├── test_utils.rs           # Utilities for testing the prover (helper functions, mocks, and utilities for unit and integration testing of the prover)  
     ├── trace  
-    │   ├── eval.rs             # Trace evaluation logic  
-    │   ├── mod.rs              # Module for trace logic  
-    │   ├── preprocessed.rs     # Preprocessing for traces  
-    │   ├── program_trace.rs    # Program-specific trace logic  
-    │   ├── program.rs          # Program representation for tracing  
-    │   ├── regs.rs             # Register state tracing  
+    │   ├── eval.rs             # Trace evaluation logic (logic for evaluating the correctness of execution traces)  
+    │   ├── mod.rs              # Module for trace logic (main module for organizing all trace-related logic)  
+    │   ├── preprocessed.rs     # Preprocessing for traces (logic for preprocessing trace data for efficiency and correctness)  
+    │   ├── program_trace.rs    # Program-specific trace logic (logic for handling traces specific to individual programs)  
+    │   ├── program.rs          # Program representation for tracing (defines how programs are represented within the trace system)  
+    │   ├── regs.rs             # Register state tracing (logic for tracking register state changes throughout execution)  
     │   ├── sidenote  
-    │   │   ├── keccak.rs       # Keccak-related sidenote logic  
-    │   │   └── mod.rs          # Module for sidenote  
-    │   ├── trace_builder.rs    # Builder for constructing traces  
-    │   ├── utils_external.rs   # External utilities for traces  
-    │   └── utils.rs            # Internal utilities for traces  
-    ├── traits.rs               # Common prover traits and interfaces  
-    └── virtual_column.rs       # Logic for virtual (computed) trace columns  
+    │   │   ├── keccak.rs       # Keccak-related sidenote logic (auxiliary logic for Keccak hash operations)  
+    │   │   └── mod.rs          # Module for sidenote (main module for auxiliary and sidenote logic)  
+    │   ├── trace_builder.rs    # Builder for constructing traces (logic for building execution traces from VM execution)  
+    │   ├── utils_external.rs   # External utilities for traces (helper functions for trace processing, used externally)  
+    │   └── utils.rs            # Internal utilities for traces (helper functions for internal trace manipulation and processing)  
+    ├── traits.rs               # Common prover traits and interfaces (defines common traits and interfaces for chips, traces, and components, ensuring modularity and extensibility)  
+    └── virtual_column.rs       # Logic for virtual (computed) trace columns (logic for virtual trace columns, which are computed from other columns and used for expressing complex constraints)  
 ```
 ### Description of each component
 
